@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franamodo - Welcome</title>
+    <title>Vigiland - Welcome</title>
     <link href="materialize/css/materialize.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -16,6 +16,7 @@
              height: 100%;
              margin: 0;
              padding: 0;
+             overflow: hidden;
          }
     </style>
     
@@ -37,10 +38,12 @@
     </script>
 </head>
 <body>
+
+    <span style="position: absolute; top: 70px; left: 590px; font-size: 20px; color: white">Heatmap of landslides across the globe</span>
     
     <nav class="nav-extended">
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo" style="padding-left: 10px;">FranaModo</a>
+            <a href="#" class="brand-logo center">VIGILAND</a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="sass.html">Data Catalog</a></li>
@@ -48,43 +51,40 @@
                 <li><a href="collapsible.html">Data Sources</a></li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
-                <li><a href="sass.html">Sass</a></li>
-                <li><a href="badges.html">Components</a></li>
-                <li><a href="collapsible.html">JavaScript</a></li>
+                <li><a href="sass.html">Data Catalog</a></li>
+                <li><a href="badges.html">Data Buzz</a></li>
+                <li><a href="collapsible.html">Data Sources</a></li>
             </ul>
         </div>
         <div class="nav-content">
             <ul class="tabs tabs-transparent">
                 <li class="tab"><a  class="active" href="#test1">Maps</a></li>
-                <li class="tab"><a href="#test2">Statistics</a></li>                
-            </ul>            
+                <li class="tab"><a href="#test2">Statistics</a></li>                                
+            </ul>                        
         </div>
     </nav>
     <div id="test1" style="height: 100%"><div id="map"></div></div>
     <div id="test2"  class="col s12">adsdhasjkh</div>    
 
-    
-    
-
-    <!--Action Button-->
-    <div class="fixed-action-btn click-to-toggle">
-        <a class="btn-floating btn-large red">
+    <div class="fixed-action-btn toolbar">
+        <a class="btn-floating btn-large amber darken-2">
             <i class="large material-icons">mode_edit</i>
         </a>
         <ul>
-            <li><a class="btn-floating red" onclick="toggleHeatmap()"><i class="material-icons">insert_chart</i></a></li>
-            <li><a class="btn-floating yellow darken-1" onclick="getLocation()"><i class="material-icons">format_quote</i></a></li>
-            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+            <li class="waves-effect waves-light"><a href="#!"  onclick="toggleHeatmap()">Toggle Heatmap</a></li>
+            <li class="waves-effect waves-light"><a href="#!">Toggle Markers</a></li>
+            <li class="waves-effect waves-light"><a href="#!" onclick="getLocation()" style="background-color: orangered">My Location</a></li>
+            <li class="waves-effect waves-light"><a href="#!">Upload Data</a></li>
         </ul>
     </div>
+       
     
     <script>
-        var map, pos, heatmap, lsdata = [];
+        var map, pos, markers, heatmap, lsdata = [];
         var heatmapData = [];
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 2,
+          zoom: 3,
           center: { lat: -33.865427, lng: 151.196123 },
           styles: [{
               stylers: [{
@@ -95,6 +95,8 @@
         });
 
         
+
+
                 
         $.ajax({
             url: "https://data.nasa.gov/resource/tfkf-kniw.json",
@@ -105,21 +107,16 @@
                     
                 });
                 eqfeed_callback();                                
+                
+                //markers = heatmapData.map(function (location, i) {
+                //    return new google.maps.Marker({
+                //        position: location,
+                //    });
+                //});
+                
 
-                // Add some markers to the map.
-                // Note: The code uses the JavaScript Array.prototype.map() method to
-                // create an array of markers based on a given "locations" array.
-                // The map() method here has nothing to do with the Google Maps API.
-                var markers = heatmapData.map(function (location, i) {
-                    return new google.maps.Marker({
-                        position: location,
-                        //label: labels[i % labels.length]
-                    });
-                });
-
-                // Add a marker clusterer to manage the markers.
-                var markerCluster = new MarkerClusterer(map, markers,
-                    { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });            
+                //var markerCluster = new MarkerClusterer(map, markers,
+                //    { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });            
 
             }
         });
@@ -127,7 +124,9 @@
         
 
         }
-
+        
+        
+        
 
         function eqfeed_callback() {
          
@@ -170,6 +169,11 @@
                 alert("Your browser does not support Geolocation!");
             }
         }
+
+        
+
+        
+
     </script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>

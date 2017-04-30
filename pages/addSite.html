@@ -17,10 +17,28 @@
              height: 100%;
              margin: 0;
              padding: 0;
+             overflow: hidden
          }
     </style>
 </head>
 <body>
+
+    <div>
+        <nav class="nav-extended">
+            <div class="nav-wrapper">
+                <a href="#!" class="brand-logo center">VIGILAND</a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Data Catalog</a></li>
+                    <li><a href="badges.html">Data Buzz</a></li>
+                    <li><a href="collapsible.html">Data Sources</a></li>
+                </ul>
+            </div>
+            <div class="nav-content" style="padding-bottom: 20px;">
+                <div class="center" style="color: white; font-size: 20px;">Select a location</div>
+            </div>
+        </nav>
+    </div>
+
     <div id="map" height="460px" width="100%"></div>
     <div id="form">
         <table>
@@ -131,7 +149,7 @@
           var california = { lat: 20.5937, lng: 78.9629};
         map = new google.maps.Map(document.getElementById('map'), {
           center: california,
-          zoom: 13
+          zoom: 11
         });
 
         infowindow = new google.maps.InfoWindow({
@@ -149,39 +167,12 @@
           });
 
 
-          google.maps.event.addListener(marker, 'click', function() {
-           //infowindow.open(map, marker);
+          google.maps.event.addListener(marker, 'click', function() {           
               $('#modal1').modal('open');
           });
         });
-      }
-
-      function saveData() {
-        var name = escape(document.getElementById('name').value);
-        var address = escape(document.getElementById('address').value);
-        var type = document.getElementById('type').value;
-        var latlng = marker.getPosition();
-        var url = 'phpsqlinfo_addrow.php?name=' + name + '&address=' + address +
-                  '&type=' + type + '&lat=' + latlng.lat() + '&lng=' + latlng.lng();
-
-        
-      }
-
-      function downloadUrl(url, callback) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
-
-        request.onreadystatechange = function() {
-          if (request.readyState == 4) {
-            request.onreadystatechange = doNothing;
-            callback(request.responseText, request.status);
-          }
-        };
-
-        request.open('GET', url, true);
-        request.send(null);
-      }
+      }      
+      
 
       function doNothing () {
       }
