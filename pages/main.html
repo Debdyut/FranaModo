@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/winjs/4.4.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-3.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/winjs/4.4.0/js/base.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/winjs/4.4.0/js/ui.js"></script>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content,
+        #app {
+            height: 100%;
+        }
+
+            #app .win-splitviewpanetoggle {
+                float: left;
+                /*color: white*/
+            }
+
+            /* SplitView pane content style*/
+            #app .header {
+                white-space: nowrap;
+            }
+
+            #app .title {
+                font-size: 25px;
+                left: 50px;
+                margin-top: 6px;
+                vertical-align: middle;
+                display: inline-block;
+            }
+
+            #app .nav-commands {
+                margin-top: 20px;
+            }
+
+        .win-splitviewcommand-button {
+            background-color: transparent;
+            /*color: white*/
+        }
+
+        #app .win-splitview-pane-closed .win-splitviewcommand-label {
+            /*  Make sure pane content doesn't scroll if 
+    SplitViewCommand label receives focus while pane is closed.
+    */
+            visibility: hidden;
+        }
+
+        /*SplitView content style*/
+        #app .win-splitview-content {
+            background-color: rgb(0, 0, 0);
+        }
+
+        #app .contenttext {
+            margin-left: 20px;
+            margin-top: 6px;
+        }
+
+        #content {
+            text-align: center;
+        }
+
+        #legend {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+        }
+
+        #grad {
+            width: 400px;
+            height: 35px;
+            
+
+            background: red; /* For browsers that do not support gradients */
+            /* For Safari 5.1 to 6.0 */
+            background: -webkit-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+            /* For Opera 11.1 to 12.0 */
+            background: -o-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+            /* For Fx 3.6 to 15 */
+            background: -moz-linear-gradient(left,red,orange,yellow,green,blue,indigo,violet);
+            /* Standard syntax */
+            background: linear-gradient(to right, red,orange,yellow,green);
+        }
+        
+
+
+    </style>
+    <script>
+        WinJS.Namespace.define("Sample", {
+            outputCommand: WinJS.UI.eventHandler(function (ev) {                
+                var command = ev.currentTarget;
+                if (command.winControl) {
+                    var label = command.winControl.label || command.winControl.icon || "button";
+                    var section = command.winControl.section || "";
+                    var msg = section + " command " + label + " was pressed";
+                    alert(msg);
+                }
+            })
+        });
+
+        
+
+
+
+
+        WinJS.UI.processAll().done(function () {
+            var splitView = document.querySelector(".splitView").winControl;
+            new WinJS.UI._WinKeyboard(splitView.paneElement); // Temporary workaround: Draw keyboard focus visuals on NavBarCommands
+        });
+
+
+
+    </script>
+</head>
+<body>
+    <div id="app">
+        <div class="splitView" data-win-control="WinJS.UI.SplitView">
+            <!-- Pane area -->
+            <div>
+                <div class="header">
+                    <button class="win-splitviewpanetoggle"
+                            data-win-control="WinJS.UI.SplitViewPaneToggle"
+                            data-win-options="{ splitView: select('.splitView') }"></button>
+                    <div class="title">Global Landslide Data</div>
+                </div>
+
+                <div class="nav-commands">
+                    <div data-win-control="WinJS.UI.SplitViewCommand" data-win-options="{ label: 'Home', icon: 'home'}"></div>
+                    <div data-win-control="WinJS.UI.SplitViewCommand" data-win-options="{ label: 'Map', icon: 'map'}"></div>
+                    <div data-win-control="WinJS.UI.SplitViewCommand" data-win-options="{ label: 'GPS', icon: 'target'}"></div>
+                </div>
+            </div>
+
+
+            <!-- Content area -->
+            <!--<div class="contenttext"><h2 class="win-h2">SplitView Content area</h2> </div>-->
+
+            <div style="font-size: 24px;">
+                <div>Global Landslide Heatmap</div>
+            </div>
+
+            <div class="content">                
+                <div class="basicToolbar" data-win-control="WinJS.UI.ToolBar">     
+                    
+                    <!-- Primary commands -->
+                    <button data-win-control="WinJS.UI.Command" data-win-options="{
+            id:'cmdEdit',
+            label:'My Location',
+            section:'primary',
+            type:'button',
+            icon: 'target',
+            onclick: Sample.outputCommand}"></button>
+                    <button data-win-control="WinJS.UI.Command" data-win-options="{
+            id:'cmdEdit',
+            label:'Edit Site',
+            section:'primary',
+            type:'button',                            
+            icon: 'edit',
+            onclick: Sample.outputCommand}"></button>
+                    <button data-win-control="WinJS.UI.Command" data-win-options="{
+            id:'cmdAdd',
+            label:'Add Site',
+            section:'primary',
+            type:'button',
+            icon: 'add',
+            onclick: Sample.outputCommand}"></button>
+                    <button data-win-control="WinJS.UI.Command" data-win-options="{
+            id:'cmdUploadPhotos',
+            label:'Upload Photos',
+            section:'primary',
+            type:'toggle',
+            icon: 'openfile',
+            onclick: Sample.outputCommand}"></button>
+                   
+
+                    <!-- Secondary command -->
+                    <button data-win-control="WinJS.UI.Command" data-win-options="{
+            id:'cmdSettings',
+            label:'Cluster View',
+            section:'secondary',
+            type:'button',
+            onclick: Sample.outputCommand}"></button>
+                    <button data-win-control="WinJS.UI.Command" data-win-options="{
+            id:'cmdShare',
+            label:'Heat Map',
+            section:'secondary',
+            type:'button',
+            onclick: Sample.outputCommand}"></button>
+                </div>
+                
+                <div id="legend" style="display:inline-block; color: black">
+                    <!--<span>Density:</span>-->
+                    <div id="grad">
+                        <span style="margin: 10px">Higher Density</span>
+                        <span style="float:right; margin: 10px;">Lower Density</span>
+                    </div>                    
+                </div>
+
+                <div id="map"></div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+    
+        <!--<div id="map"></div>-->
+        <script>
+            var map, lsdata = [];
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 2,
+                    center: { lat: -33.865427, lng: 151.196123 },
+                    styles: [{
+                        stylers: [{
+                            saturation: -100
+                        }]
+                    }],
+                    mapTypeId: 'terrain'
+                });
+
+                // Create a <script> tag and set the USGS URL as the source.
+                //var script = document.createElement('script');
+
+
+                $.ajax({
+                    url: "https://data.nasa.gov/resource/tfkf-kniw.json",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (x, y) {
+                            lsdata.push(y.geolocation.coordinates);
+
+                        });
+                        eqfeed_callback();
+                    }
+                });
+
+
+
+            }
+
+
+            function eqfeed_callback() {
+
+
+                var heatmapData = [];
+                for (var i = 0; i < lsdata.length; i++) {
+
+                    var coords = lsdata[i];
+                    var latLng = new google.maps.LatLng(coords[1], coords[0]);
+                    heatmapData.push(latLng);
+                }
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatmapData,
+                    dissipating: false,
+                    map: map
+                });
+            }
+        </script>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDFdLs5s-QE4idGzhq4FSv25SNue3U0E&libraries=visualization&callback=initMap">
+        </script>
+
+</body>
+</html>

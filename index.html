@@ -1,9 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FranaModo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franamodo - Welcome</title>
+    <link href="materialize/css/materialize.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+         /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+         #map {
+             height: 100%;
+         }
+         /* Optional: Makes the sample page fill the window. */
+         html, body {
+             height: 100%;
+             margin: 0;
+             padding: 0;
+         }
+    </style>
+    
+    <script src="Scripts/jquery-3.1.1.js"></script>    
+    <script src="materialize/js/materialize.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+
+            
+        });
+
+        $('.fixed-action-btn').openFAB();
+        $('.fixed-action-btn').closeFAB();
+        $('.fixed-action-btn.toolbar').openToolbar();
+        $('.fixed-action-btn.toolbar').closeToolbar();
+
+
+    </script>
 </head>
 <body>
+    
+    <nav class="nav-extended">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">FranaModo</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a  class="active" href="#test1">Maps</a></li>
+                <li class="tab"><a href="#test2">Statistics</a></li>                
+            </ul>            
+        </div>
+    </nav>
+    <div id="test1" style="height: 100%"><div id="map"></div></div>
+    <div id="test2"  class="col s12">adsdhasjkh</div>    
 
+    
+    
+
+    <!--Action Button-->
+    <div class="fixed-action-btn horizontal">
+        <a class="btn-floating btn-large red">
+            <i class="large material-icons">mode_edit</i>
+        </a>
+        <ul>
+            <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+            <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+        </ul>
+    </div>
+    
+    <script>
+      var map, lsdata = [];
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 2,
+          center: { lat: -33.865427, lng: 151.196123 },
+          styles: [{
+              stylers: [{
+                  saturation: -100
+              }]
+          }],
+          mapTypeId: 'terrain'
+        });
+
+        // Create a <script> tag and set the USGS URL as the source.
+        //var script = document.createElement('script');  
+
+                
+        $.ajax({
+            url: "https://data.nasa.gov/resource/tfkf-kniw.json",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (x, y) {
+                    lsdata.push(y.geolocation.coordinates);
+                    
+                });
+                eqfeed_callback();
+            }
+        });
+
+        
+
+        }
+
+
+        function eqfeed_callback() {
+
+
+         var heatmapData = [];
+         for (var i = 0; i < lsdata.length; i++) {
+          
+          var coords = lsdata[i];
+          var latLng = new google.maps.LatLng(coords[1], coords[0]);
+          heatmapData.push(latLng);          
+        }
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData,
+          dissipating: false,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDFdLs5s-QE4idGzhq4FSv25SNue3U0E&libraries=visualization&callback=initMap">
+    </script>
 </body>
 </html>
