@@ -40,12 +40,12 @@
     
     <nav class="nav-extended">
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">FranaModo</a>
+            <a href="#" class="brand-logo" style="padding-left: 10px;">FranaModo</a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="sass.html">Sass</a></li>
-                <li><a href="badges.html">Components</a></li>
-                <li><a href="collapsible.html">JavaScript</a></li>
+                <li><a href="sass.html">Data Catalog</a></li>
+                <li><a href="badges.html">Data Buzz</a></li>
+                <li><a href="collapsible.html">Data Sources</a></li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
                 <li><a href="sass.html">Sass</a></li>
@@ -67,20 +67,21 @@
     
 
     <!--Action Button-->
-    <div class="fixed-action-btn horizontal">
+    <div class="fixed-action-btn click-to-toggle">
         <a class="btn-floating btn-large red">
             <i class="large material-icons">mode_edit</i>
         </a>
         <ul>
-            <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-            <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+            <li><a class="btn-floating red" onclick="toggleHeatmap()"><i class="material-icons">insert_chart</i></a></li>
+            <li><a class="btn-floating yellow darken-1" onclick="getLocation()"><i class="material-icons">format_quote</i></a></li>
             <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
             <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
         </ul>
     </div>
     
     <script>
-      var map, lsdata = [];
+        var map, pos, heatmap, lsdata = [];
+        var heatmapData = [];
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           zoom: 2,
@@ -93,9 +94,7 @@
           mapTypeId: 'terrain'
         });
 
-        // Create a <script> tag and set the USGS URL as the source.
-        //var script = document.createElement('script');  
-
+        
                 
         $.ajax({
             url: "https://data.nasa.gov/resource/tfkf-kniw.json",
@@ -105,7 +104,23 @@
                     lsdata.push(y.geolocation.coordinates);
                     
                 });
-                eqfeed_callback();
+                eqfeed_callback();                                
+
+                // Add some markers to the map.
+                // Note: The code uses the JavaScript Array.prototype.map() method to
+                // create an array of markers based on a given "locations" array.
+                // The map() method here has nothing to do with the Google Maps API.
+                var markers = heatmapData.map(function (location, i) {
+                    return new google.maps.Marker({
+                        position: location,
+                        //label: labels[i % labels.length]
+                    });
+                });
+
+                // Add a marker clusterer to manage the markers.
+                var markerCluster = new MarkerClusterer(map, markers,
+                    { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });            
+
             }
         });
 
@@ -115,22 +130,51 @@
 
 
         function eqfeed_callback() {
-
-
-         var heatmapData = [];
+         
          for (var i = 0; i < lsdata.length; i++) {
           
           var coords = lsdata[i];
           var latLng = new google.maps.LatLng(coords[1], coords[0]);
           heatmapData.push(latLng);          
         }
-        var heatmap = new google.maps.visualization.HeatmapLayer({
+        heatmap = new google.maps.visualization.HeatmapLayer({
           data: heatmapData,
           dissipating: false,
           map: map
-        });
-      }
+         });
+
+        }
+
+        function toggleHeatmap() {
+            heatmap.setMap(heatmap.getMap() ? null : map);
+        }
+
+        function getLocation() {
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(pos);                    
+                    map.setZoom(5);
+
+                    //getReverseGeocodingData(pos.lat, pos.lng);
+
+                }, function () {
+
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                alert("Your browser does not support Geolocation!");
+            }
+        }
     </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+
+
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyDFdLs5s-QE4idGzhq4FSv25SNue3U0E&libraries=visualization&callback=initMap">
     </script>

@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../materialize/css/materialize.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-3.1.1.js"></script>
+    <script src="../materialize/js/materialize.js"></script>
+    <style>
+        header, main, footer {
+            padding-left: 300px;
+        }
+
+        @media only screen and (max-width : 992px) {
+            header, main, footer {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#!" class="brand-logo">FranaModo</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul  id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Continent</th>
+                <th>Country</th>
+                <th>Date</th>
+                <th>Fatalities</th>
+                <th>Injuries</th>
+                <th>Landslide Size</th>
+                <th>Landslide Type</th>
+                <th>Storm Name</th>
+                <th>Trigger</th>
+            </tr>
+        </thead>
+
+        <tbody id="tbody">
+            
+            
+        </tbody>
+    </table>
+
+    <script>
+        var continents = {
+            'NA': 'North America',
+            'AS': 'Asia',
+            'EU': 'Europe',
+            'OC': 'Oceania',
+            'SA': 'South America',
+            'AF': 'Africa',
+            'AN': 'Antarctica'           
+        };
+
+        var lsdata = [];
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+
+            $.ajax({
+                url: "https://data.nasa.gov/resource/tfkf-kniw.json",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (x, y) {
+                        lsdata.push({ continentcode: y.continentcode, countryname: y.countryname, date: y.date, fatalities: y.fatalities, injuries: y.injuries, landslide_size: y.landslide_size, landslide_type: y.landslide_type, storm_name: y.storm_name, trigger: y.trigger, coords: y.geolocation.coordinates });
+                    });
+
+                    console.log(lsdata);
+
+                    for (var i = 0; i < lsdata.length; i++) {
+                        document.getElementById("tbody").innerHTML += "<tr>"
+                            + "<td>" + (i+1) + "</td>"
+                            + "<td>" + continents[lsdata[i].continentcode] + "</td>"
+                            + "<td>" + lsdata[i].countryname + "</td>"
+                            + "<td>" + lsdata[i].date.split("T")[0] + "</td>"
+                            + "<td>" + (lsdata[i].fatalities == null ? "-" : lsdata[i].fatalities) + "</td>"
+                            + "<td>" + (lsdata[i].injuries == null ? "-" : lsdata[i].fatalities) + "</td>"
+                            + "<td>" + (lsdata[i].landslide_size == null ? "-" : lsdata[i].landslide_size) + "</td>"
+                            + "<td>" + (lsdata[i].landslide_type == null ? "-" : lsdata[i].landslide_type) + "</td>"
+                            + "<td>" + (lsdata[i].storm_name == null ? "-" : lsdata[i].storm_name) + "</td>"
+                            + "<td>" + (lsdata[i].trigger == null ? "-" : lsdata[i].trigger) + "</td>"
+                            + "</tr>"
+                    }
+                }
+            });
+
+            
+        });
+        
+
+
+
+    </script>
+</body>
+</html>

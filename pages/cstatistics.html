@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="../Scripts/jquery-3.1.1.js"></script>
+</head>
+<body>
+    <script>
+        var lsdata = [];
+
+        var country = "India";
+
+        var years = {};
+        var injuries = {};
+        var fatalities = {};
+
+        $(document).ready(function() {
+            $.ajax({
+                url: "https://data.nasa.gov/resource/tfkf-kniw.json?country=" + country,
+                dataType: "json",
+                success: function (data) {
+                    
+                    $.each(data, function (x, y) {
+                        year = new Date(y.tstamp).getFullYear();
+                        if (years.hasOwnProperty(year)) {
+                            years[year.toString()]++;
+                        }
+                        else {
+                            years[year.toString()] = 1;
+                        }
+
+                        if (injuries.hasOwnProperty(year.toString())) {
+                            var inj = parseInt(y.injuries, 10);
+                            if (injuries != null && !isNaN(inj)) {
+                                //console.log(inj);
+                                injuries[year.toString()] += inj;
+                            }
+                            var fat = parseInt(y.fatalities, 10);
+                            if (fatalities != null && !isNaN(fat)) {
+                                //console.log(fat);
+                                fatalities[year.toString()] += fat;
+                            }
+                        }
+                        else {
+                            var inj = parseInt(y.injuries, 10);
+                            if (injuries != null && !isNaN(inj)) {
+                                //console.log(inj);
+                                injuries[year.toString()] = inj;
+                            }
+                            var fat = parseInt(y.fatalities, 10);
+                            if (fatalities != null && !isNaN(fat)) {
+                                //console.log(fat);
+                                fatalities[year.toString()] = fat;
+                            }
+                        }
+                            
+                        lsdata.push(); 
+                    });
+
+                    
+
+                    console.log(years);
+                    console.log(injuries);
+                    console.log(fatalities);
+                    
+                }
+            });
+        });
+    </script>
+</body>
+</html>
